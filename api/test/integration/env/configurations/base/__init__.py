@@ -1,0 +1,1 @@
+fortishield_master = __import__('fortishield-master')
