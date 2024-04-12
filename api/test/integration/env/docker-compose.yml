@@ -1,0 +1,234 @@
+version: '3.7'
+
+services:
+  fortishield-master:
+    profiles:
+      - standalone
+      - cluster
+      - managers
+    build:
+      context: .
+      dockerfile: base/manager/manager.Dockerfile
+    image: integration_test_fortishield-manager
+    hostname: fortishield-master
+    ports:
+      - "55000:55000"
+    volumes:
+      - ./configurations/tmp/manager:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - fortishield-master
+      - master-node
+      - master
+      - ${ENV_MODE}
+
+  fortishield-worker1:
+    profiles:
+      - cluster
+      - managers
+    build:
+      context: .
+      dockerfile: base/manager/manager.Dockerfile
+    image: integration_test_fortishield-manager
+    hostname: fortishield-worker1
+    volumes:
+      - ./configurations/tmp/manager:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - fortishield-master
+      - worker1
+      - worker
+
+  fortishield-worker2:
+    profiles:
+      - cluster
+      - managers
+    build:
+      context: .
+      dockerfile: base/manager/manager.Dockerfile
+    image: integration_test_fortishield-manager
+    hostname: fortishield-worker2
+    volumes:
+      - ./configurations/tmp/manager:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - fortishield-master
+      - worker2
+      - worker
+
+  fortishield-agent1:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/new.Dockerfile
+    image: integration_test_fortishield-agent
+    hostname: fortishield-agent1
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent1
+    depends_on:
+      - nginx-lb
+
+  fortishield-agent2:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/new.Dockerfile
+    image: integration_test_fortishield-agent
+    hostname: fortishield-agent2
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent2
+    depends_on:
+      - fortishield-agent1
+      - nginx-lb
+
+  fortishield-agent3:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/new.Dockerfile
+    image: integration_test_fortishield-agent
+    hostname: fortishield-agent3
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent3
+    depends_on:
+      - fortishield-agent2
+      - nginx-lb
+
+  fortishield-agent4:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/new.Dockerfile
+    image: integration_test_fortishield-agent
+    hostname: fortishield-agent4
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent4
+    depends_on:
+      - fortishield-agent3
+      - nginx-lb
+
+  fortishield-agent5:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/old.Dockerfile
+    image: integration_test_fortishield-agent_old
+    hostname: fortishield-agent5
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent5
+      - agent_old
+    depends_on:
+      - fortishield-agent4
+      - nginx-lb
+
+  fortishield-agent6:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/old.Dockerfile
+    image: integration_test_fortishield-agent_old
+    hostname: fortishield-agent6
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent6
+      - agent_old
+    depends_on:
+      - fortishield-agent5
+      - nginx-lb
+
+  fortishield-agent7:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/old.Dockerfile
+    image: integration_test_fortishield-agent_old
+    hostname: fortishield-agent7
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent7
+      - agent_old
+    depends_on:
+      - fortishield-agent6
+      - nginx-lb
+
+  fortishield-agent8:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: .
+      dockerfile: base/agent/old.Dockerfile
+    image: integration_test_fortishield-agent_old
+    hostname: fortishield-agent8
+    volumes:
+      - ./configurations/tmp/agent:/tmp_volume
+      - ./tools/:/tools
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - nginx-lb
+      - fortishield-agent8
+      - agent_old
+    depends_on:
+      - fortishield-agent7
+      - nginx-lb
+
+  nginx-lb:
+    profiles:
+      - standalone
+      - cluster
+    build:
+      context: ./base/nginx-lb
+    image: integration_test_nginx-lb
+    entrypoint:
+      - /scripts/entrypoint.sh
+      - ${ENV_MODE}
