@@ -1,0 +1,18 @@
+[Unit]
+Description=Fortishield manager
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+
+ExecStart=/usr/bin/env FORTISHIELD_HOME_TMP/bin/fortishield-control start
+ExecStop=/usr/bin/env FORTISHIELD_HOME_TMP/bin/fortishield-control stop
+ExecReload=/usr/bin/env FORTISHIELD_HOME_TMP/bin/fortishield-control reload
+
+KillMode=process
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
