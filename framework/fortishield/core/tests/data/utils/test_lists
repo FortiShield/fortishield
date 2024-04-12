@@ -1,5 +1,0 @@
-test-fortishield-w:write
-test-fortishield-r:read
-test-fortishield-a:attribute
-test-fortishield-x:execute
-test-fortishield-c:command
