@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# name: fortishield
+# purpose: Init script for Fortishield
+# Copyright (C) 2015, KhulnaSoft Ltd. <support@khulnasoft.com>
+#
+
+FORTISHIELD_HOME=FORTISHIELD_HOME_TMP
+FORTISHIELD_CONTROL="$FORTISHIELD_HOME/bin/fortishield-control"
+
+case "$1" in
+start)
+    if [ -f "$FORTISHIELD_CONTROL" ]; then
+        echo "Starting Fortishield"
+        ${FORTISHIELD_CONTROL} start
+    fi
+    ;;
+stop)
+    if [ -f "$FORTISHIELD_CONTROL" ]; then
+        echo "Stopping Fortishield"
+        ${FORTISHIELD_CONTROL} stop
+    fi
+    ;;
+status)
+    if [ -f "$FORTISHIELD_CONTROL" ]; then
+        ${FORTISHIELD_CONTROL} status
+    fi
+    ;;
+restart)
+    if [ -f "$FORTISHIELD_CONTROL" ]; then
+        ${FORTISHIELD_CONTROL} restart
+    fi
+    ;;
+*)
+    echo "Usage: $0 (start | stop | restart | status)"
+    exit 1
+esac
